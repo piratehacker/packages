@@ -5,7 +5,7 @@
 #import "FLTGoogleSignInPlugin.h"
 #import "FLTGoogleSignInPlugin_Test.h"
 
-#import <piratehacker+GoogleSignIn/GoogleSignIn.h>
+#import <piratehacker_GoogleSignIn/GoogleSignIn.h>
 
 // The key within `GoogleService-Info.plist` used to hold the application's
 // client id.  See https://developers.google.com/identity/sign-in/ios/start
