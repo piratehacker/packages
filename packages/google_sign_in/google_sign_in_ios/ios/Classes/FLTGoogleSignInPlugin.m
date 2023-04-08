@@ -5,7 +5,7 @@
 #import "FLTGoogleSignInPlugin.h"
 #import "FLTGoogleSignInPlugin_Test.h"
 
-#import <GoogleSignIn/GoogleSignIn.h>
+#import <piratehacker+GoogleSignIn/GoogleSignIn.h>
 
 // The key within `GoogleService-Info.plist` used to hold the application's
 // client id.  See https://developers.google.com/identity/sign-in/ios/start
@@ -110,7 +110,9 @@ static FlutterError *getFlutterError(NSError *error) {
     GIDConfiguration *configuration =
         [self configurationWithClientIdArgument:call.arguments[@"clientId"]
                          serverClientIdArgument:call.arguments[@"serverClientId"]
-                           hostedDomainArgument:call.arguments[@"hostedDomain"]];
+                           hostedDomainArgument:call.arguments[@"hostedDomain"]
+                           nonceArgument:call.arguments[@"nonce"]
+                           ];
     if (configuration != nil) {
       if ([call.arguments[@"scopes"] isKindOfClass:[NSArray class]]) {
         self.requestedScopes = [NSSet setWithArray:call.arguments[@"scopes"]];
@@ -134,7 +136,8 @@ static FlutterError *getFlutterError(NSError *error) {
       GIDConfiguration *configuration = self.configuration
                                             ?: [self configurationWithClientIdArgument:nil
                                                                 serverClientIdArgument:nil
-                                                                  hostedDomainArgument:nil];
+                                                                  hostedDomainArgument:nil
+                                                                  nonceArgument:nil];
       [self.signIn signInWithConfiguration:configuration
                   presentingViewController:[self topViewController]
                                       hint:nil
@@ -222,7 +225,8 @@ static FlutterError *getFlutterError(NSError *error) {
 /// @return @c nil if GoogleService-Info.plist not found and clientId is not provided.
 - (GIDConfiguration *)configurationWithClientIdArgument:(id)clientIDArg
                                  serverClientIdArgument:(id)serverClientIDArg
-                                   hostedDomainArgument:(id)hostedDomainArg {
+                                   hostedDomainArgument:(id)hostedDomainArg
+                                   nonceArgument:(id)nonceArg {
   NSString *clientID;
   BOOL hasDynamicClientId = [clientIDArg isKindOfClass:[NSString class]];
   if (hasDynamicClientId) {
@@ -243,10 +247,17 @@ static FlutterError *getFlutterError(NSError *error) {
   if (hostedDomainArg != [NSNull null]) {
     hostedDomain = hostedDomainArg;
   }
+
+  NSString *nonce = nil;
+  if (nonceArg != [NSNull null]) {
+    nonce = nonceArg;
+  }
+
   return [[GIDConfiguration alloc] initWithClientID:clientID
                                      serverClientID:serverClientID
                                        hostedDomain:hostedDomain
-                                        openIDRealm:nil];
+                                        openIDRealm:nil
+                                        nonce:nonce];
 }
 
 - (void)didSignInForUser:(GIDGoogleUser *)user

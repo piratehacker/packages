@@ -50,6 +50,7 @@ class GoogleSignInIOS extends GoogleSignInPlatform {
       'hostedDomain': params.hostedDomain,
       'clientId': params.clientId,
       'serverClientId': params.serverClientId,
+      'nonce': null
     });
   }
 
